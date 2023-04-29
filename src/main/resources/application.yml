@@ -1,0 +1,7 @@
+server:
+  port: 8081
+
+rocketmq:
+  producer:
+    group: boot-producer
+  name-server: 47.109.31.128:9876
