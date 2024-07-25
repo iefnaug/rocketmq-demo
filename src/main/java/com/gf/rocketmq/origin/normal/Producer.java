@@ -29,6 +29,7 @@ public class Producer {
     public static void main(String[] args) throws MQClientException, MQBrokerException, RemotingException, InterruptedException {
         DefaultMQProducer producer = new DefaultMQProducer(PRODUCER_GROUP);
         producer.setNamesrvAddr(DEFAULT_NAMESRVADDR);
+        producer.setRetryTimesWhenSendFailed(2);
         producer.start();
 //        for (int i = 0; i < MESSAGE_COUNT; i++) {
 //            Message message = new Message();
@@ -65,6 +66,7 @@ public class Producer {
                 message.setTopic(TOPIC);
 //                message.setTags(TAG);
                 message.setTags("TagB");
+                message.putUserProperty("name", "k");
                 message.setKeys(UUID.randomUUID().toString());
                 message.setBody(line.getBytes(StandardCharsets.UTF_8));
                 SendResult sendResult = producer.send(message);

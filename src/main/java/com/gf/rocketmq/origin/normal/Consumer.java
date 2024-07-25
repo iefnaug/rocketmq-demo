@@ -2,12 +2,14 @@ package com.gf.rocketmq.origin.normal;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.remoting.protocol.heartbeat.MessageModel;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -28,6 +30,10 @@ public class Consumer {
         consumer.setNamesrvAddr(DEFAULT_NAMESRVADDR);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         consumer.subscribe(TOPIC, "TagA||TagB");
+        consumer.setMessageModel(MessageModel.BROADCASTING);
+        consumer.setMaxReconsumeTimes(2);
+        //需要在broker配置文件设置enablePropertyFilter=true
+//        consumer.subscribe(TOPIC, MessageSelector.bySql("name = 'kk'"));
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
